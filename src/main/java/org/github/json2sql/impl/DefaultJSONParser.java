@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateUtils;
 import org.github.json2sql.api.JSONParser;
+import org.github.json2sql.api.JSONWriter;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,18 +20,38 @@ public class DefaultJSONParser implements JSONParser {
     @SneakyThrows
     @Override
     public void parse(String json, String tableName) {
-
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, String>> maps = objectMapper.readValue(json, new TypeReference<List<Map<String, String>>>() {
         });
 
-        Map<String, String> tableMap = new HashMap<>();
-        for (Map<String, String> map : maps) {
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String paramType = createParamType(entry.getValue());
-                tableMap.put(entry.getKey(),paramType);
+
+        Map<String, String> createTableNeedParamMap = createCreateTableMap(maps);
+
+        Map<String, Object> sqlParamMap = new HashMap();
+        sqlParamMap.put("tableName", tableName);
+        sqlParamMap.put("tableParam", createTableNeedParamMap);
+
+        JSONWriter jsonWriter = new DefaultJSONWriter();
+        jsonWriter.writer(sqlParamMap,"");
+    }
+
+    private Map<String, String> createCreateTableMap(List<Map<String, String>> maps) {
+        Map<String, String> paramMap = maps.get(0);
+        Map<String, String> tableMap = new LinkedHashMap<>();
+        int size = paramMap.size();
+        int mark = 0;
+        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+            String paramType;
+            //满足条件说明是最后一个元素
+            if (mark == size - 1) {
+                paramType = createParamType(entry.getValue());
+            } else {
+                paramType = createParamType(entry.getValue()) + ",";
             }
+            tableMap.put(entry.getKey(), paramType);
+            mark++;
         }
+        return tableMap;
     }
 
 
