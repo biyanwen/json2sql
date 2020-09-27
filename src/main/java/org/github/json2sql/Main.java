@@ -3,10 +3,10 @@ package org.github.json2sql;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
+import org.github.json2sql.bean.InsertDTO;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Description:  <br>
@@ -16,16 +16,29 @@ import java.util.Map;
  */
 public class Main {
     public static void main(String[] args) {
-        Map<String,Object> root = new HashMap<>();
-        Map<String, String> requestAttributes = new HashMap<>();
-        requestAttributes.put("1","2");
-        requestAttributes.put("2","2");
-        requestAttributes.put("3","3");
-        requestAttributes.put("4","4");
-        requestAttributes.put("user","4");
+//        Map<String,Object> root = new HashMap<>();
+//        Map<String, String> requestAttributes = new HashMap<>();
+//        requestAttributes.put("1","2");
+//        requestAttributes.put("2","2");
+//        requestAttributes.put("3","3");
+//        requestAttributes.put("4","4");
+//        requestAttributes.put("user","4");
+//
+//        root.put("root",requestAttributes);
+//        root.put("tableName","test");
 
-        root.put("root",requestAttributes);
-        root.put("tableName","test");
+        Map<String,Object> root = new HashMap<>();
+        List<String> keys = Arrays.asList("a", "b", "c");
+        List<String> values = Arrays.asList("1", "2", "3");
+        List<InsertDTO> insertDTOS = new ArrayList<>();
+        InsertDTO insertDTO = new InsertDTO();
+        insertDTO.setKeys(keys);
+        insertDTO.setValues(values);
+        insertDTOS.add(insertDTO);
+        root.put("insertParam",insertDTOS);
+        root.put("tableName","MY_TABLE");
+
+
         //创建freeMarker配置实例
         Configuration configuration = new Configuration();
         Writer out = null;

@@ -1,6 +1,7 @@
 package org.github.json2sql;
 
 import org.github.json2sql.api.JSONParser;
+import org.github.json2sql.config.Configuration;
 import org.github.json2sql.impl.DefaultJSONParser;
 
 public class Json2sql {
@@ -9,6 +10,8 @@ public class Json2sql {
     public static final String INTEGER = "INTEGER";
     public static final String TIMESTAMP = "TIMESTAMP";
     public static final String VARCHAR = "VARCHAR";
+
+    private static Configuration configuration = new Configuration();
 
     /**
      * 将json解析成sql
@@ -22,5 +25,11 @@ public class Json2sql {
         parser.parse(json, tableName);
     }
 
+    public static Configuration getConfiguration() {
+        return configuration;
+    }
 
+    public static void setConfiguration(Configuration configuration) {
+        Json2sql.configuration = configuration;
+    }
 }

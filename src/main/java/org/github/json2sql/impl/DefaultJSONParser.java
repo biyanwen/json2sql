@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateUtils;
-import org.github.json2sql.api.JSONParser;
 import org.github.json2sql.api.JSONWriter;
+import org.github.json2sql.bean.AbstractJSONParser;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -14,9 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.github.json2sql.Json2sql.*;
 
-public class DefaultJSONParser implements JSONParser {
+public class DefaultJSONParser extends AbstractJSONParser {
     @SneakyThrows
     @Override
     public void parse(String json, String tableName) {
@@ -27,12 +26,12 @@ public class DefaultJSONParser implements JSONParser {
 
         Map<String, String> createTableNeedParamMap = createCreateTableMap(maps);
 
-        Map<String, Object> sqlParamMap = new HashMap();
+        Map<String, Object> sqlParamMap = new HashMap<>();
         sqlParamMap.put("tableName", tableName);
         sqlParamMap.put("tableParam", createTableNeedParamMap);
 
         JSONWriter jsonWriter = new DefaultJSONWriter();
-        jsonWriter.writer(sqlParamMap,"");
+        jsonWriter.writer(sqlParamMap, "");
     }
 
     private Map<String, String> createCreateTableMap(List<Map<String, String>> maps) {
@@ -62,7 +61,7 @@ public class DefaultJSONParser implements JSONParser {
             if (ifDateSqlType(value)) {
                 return createDateSqlType(value);
             } else {
-                return VARCHAR;
+                return getVarchar();
             }
         }
     }
@@ -91,17 +90,17 @@ public class DefaultJSONParser implements JSONParser {
 
     private String createDateSqlType(String date) {
         if (date.contains(":")) {
-            return TIMESTAMP;
+            return getTimeStamp();
         } else {
-            return DATE;
+            return getDate();
         }
     }
 
     private String createNumSqlType(String num) {
         if (num.contains(".")) {
-            return DECIMAL;
+            return getDecimal();
         } else {
-            return INTEGER;
+            return getInteger();
         }
     }
 }
