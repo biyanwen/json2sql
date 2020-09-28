@@ -3,12 +3,10 @@ package org.github.json2sql.impl;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
-import org.github.json2sql.Main;
+import org.apache.commons.lang3.StringUtils;
 import org.github.json2sql.api.JSONWriter;
 
-import java.io.File;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.Map;
 
 /**
@@ -19,7 +17,11 @@ import java.util.Map;
  */
 public class DefaultJSONWriter implements JSONWriter {
     @Override
-    public void writer(Map<String, Object> sqlParamMap, String path) {
+    public void writer(Map<String, Object> sqlParamMap, String path,String tableName) {
+        String outPath = System.getProperty("user.dir");
+        if (StringUtils.isNotEmpty(path)) {
+            outPath = path;
+        }
         //创建freeMarker配置实例
         Configuration configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         Writer out = null;
@@ -34,10 +36,10 @@ public class DefaultJSONWriter implements JSONWriter {
             //加载模版文件
             Template template = configuration.getTemplate("json2sql.ftl");
             //生成数据
-            File docFile = new File(path + "test.sql");
-//            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(docFile)));
+            File docFile = new File(outPath+ File.separatorChar + tableName);
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(docFile)));
 
-            out = new OutputStreamWriter(System.out);
+//            out = new OutputStreamWriter(System.out);
             //输出文件
             template.process(sqlParamMap, out);
         } catch (Exception e) {

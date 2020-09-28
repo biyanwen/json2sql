@@ -3,16 +3,16 @@ package org.github.json2sql.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.github.json2sql.api.JSONWriter;
 import org.github.json2sql.bean.AbstractJSONParser;
+import org.github.json2sql.bean.InsertDTO;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class DefaultJSONParser extends AbstractJSONParser {
@@ -25,32 +25,38 @@ public class DefaultJSONParser extends AbstractJSONParser {
 
 
         Map<String, String> createTableNeedParamMap = createCreateTableMap(maps);
+        List<InsertDTO> insertDTOS = createCRUDTableDTO(maps);
 
         Map<String, Object> sqlParamMap = new HashMap<>();
         sqlParamMap.put("tableName", tableName);
         sqlParamMap.put("tableParam", createTableNeedParamMap);
+        sqlParamMap.put("insertParam", insertDTOS);
 
         JSONWriter jsonWriter = new DefaultJSONWriter();
-        jsonWriter.writer(sqlParamMap, "");
+        jsonWriter.writer(sqlParamMap, null,"test.sql");
+    }
+
+    private List<InsertDTO> createCRUDTableDTO(List<Map<String, String>> maps) {
+        List<Map<String, String>> tableMaps = createTableMap(maps, t -> t);
+        return createInsertDTO(tableMaps);
+    }
+
+    private List<InsertDTO> createInsertDTO(List<Map<String, String>> tableMaps) {
+        return tableMaps.stream().map(tableMap -> {
+            InsertDTO insertDTO = new InsertDTO();
+            insertDTO.setKeys(new ArrayList<>(tableMap.keySet()));
+            insertDTO.setValues(new ArrayList<>(tableMap.values()));
+            return insertDTO;
+        }).collect(Collectors.toList());
     }
 
     private Map<String, String> createCreateTableMap(List<Map<String, String>> maps) {
         Map<String, String> paramMap = maps.get(0);
-        Map<String, String> tableMap = new LinkedHashMap<>();
-        int size = paramMap.size();
-        int mark = 0;
-        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
-            String paramType;
-            //满足条件说明是最后一个元素
-            if (mark == size - 1) {
-                paramType = createParamType(entry.getValue());
-            } else {
-                paramType = createParamType(entry.getValue()) + ",";
-            }
-            tableMap.put(entry.getKey(), paramType);
-            mark++;
+        List<Map<String, String>> tableMaps = createTableMap(Collections.singletonList(paramMap), this::createParamType);
+        if (CollectionUtils.isEmpty(tableMaps)) {
+            return new HashMap<>();
         }
-        return tableMap;
+        return tableMaps.get(0);
     }
 
 
