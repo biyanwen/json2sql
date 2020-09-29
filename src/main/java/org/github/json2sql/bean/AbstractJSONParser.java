@@ -1,13 +1,13 @@
 package org.github.json2sql.bean;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.github.json2sql.Json2sql;
+import org.github.json2sql.api.BeanProcessor;
 import org.github.json2sql.api.JSONParser;
 import org.github.json2sql.config.Configuration;
+import org.github.json2sql.enums.KeyConversionEnum;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static org.github.json2sql.Json2sql.*;
@@ -42,19 +42,58 @@ public abstract class AbstractJSONParser implements JSONParser {
      * @return
      */
 
-    protected List<Map<String, String>> createTableMap(List<Map<String, String>> maps, Function<String, String> function) {
+    protected List<Map<String, String>> createTableMap(List<Map<String, Object>> maps, Function<String, String> function) {
         List<Map<String, String>> mapList = new ArrayList<>();
-        for (Map<String, String> map : maps) {
+        //processor
+        for (Map<String, Object> map : maps) {
+            Map<String, String> stringMap = mapProcessor(map);
             Map<String, String> tableMap = new LinkedHashMap<>();
-            for (Map.Entry<String, String> entry : map.entrySet()) {
+            for (Map.Entry<String, String> entry : stringMap.entrySet()) {
+                String key = KeyConversionEnum.valueOf(configuration.getKeyConversionConfig().toString()).getKeyConversionStrategy().cover(entry.getKey());
                 String paramType;
                 paramType = function.apply(entry.getValue());
-                tableMap.put(entry.getKey(), paramType);
+                tableMap.put(key, paramType);
             }
             mapList.add(tableMap);
         }
         return mapList;
     }
 
+    private Map<String, String> mapProcessor(Map<String, Object> map) {
 
+        List<Map<String, BeanProcessor>> beanProcessorMaps = configuration.getBeanProcessorMaps();
+        Map<String, String> processNestedResult = processNestedBean(beanProcessorMaps, map);
+        return processNestedResult;
+    }
+
+    private Map<String, String> processNestedBean(List<Map<String, BeanProcessor>> beanProcessorMaps, Map<String, Object> map) {
+        Map<String, Object> temp = new HashMap<>(map);
+        Map<String, String> stringMap = new HashMap<>();
+        if (CollectionUtils.isNotEmpty(beanProcessorMaps)) {
+            //用javabean处理json中的嵌套对象
+            for (Map<String, BeanProcessor> beanProcessorMap : beanProcessorMaps) {
+                for (Map.Entry<String, BeanProcessor> entry : beanProcessorMap.entrySet()) {
+                    Object obj = temp.get(entry.getKey());
+                    if (obj == null) {
+                        continue;
+                    }
+                    BeanProcessor beanProcessor = entry.getValue();
+                    Map<String, String> beanProcessorResultMap = beanProcessor.processor(obj);
+                    stringMap.putAll(beanProcessorResultMap);
+                    //处理完移除原来的元素
+                    temp.remove(entry.getKey());
+                }
+            }
+        }
+
+        //剩下的元素都转换成String
+        for (Map.Entry<String, Object> stringObjectEntry : temp.entrySet()) {
+            String value = null;
+            if (stringObjectEntry.getValue() != null) {
+                value = stringObjectEntry.getValue().toString();
+            }
+            stringMap.put(stringObjectEntry.getKey(), value);
+        }
+        return stringMap;
+    }
 }

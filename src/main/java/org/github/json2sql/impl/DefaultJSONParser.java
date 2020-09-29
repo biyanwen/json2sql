@@ -20,9 +20,8 @@ public class DefaultJSONParser extends AbstractJSONParser {
     @Override
     public void parse(String json, String tableName) {
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Map<String, String>> maps = objectMapper.readValue(json, new TypeReference<List<Map<String, String>>>() {
+        List<Map<String, Object>> maps = objectMapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {
         });
-
 
         Map<String, String> createTableNeedParamMap = createCreateTableMap(maps);
         List<InsertDTO> insertDTOS = createCRUDTableDTO(maps);
@@ -33,12 +32,33 @@ public class DefaultJSONParser extends AbstractJSONParser {
         sqlParamMap.put("insertParam", insertDTOS);
 
         JSONWriter jsonWriter = new DefaultJSONWriter();
-        jsonWriter.writer(sqlParamMap, null,"test.sql");
+        jsonWriter.writer(sqlParamMap, null, tableName + ".sql");
     }
 
-    private List<InsertDTO> createCRUDTableDTO(List<Map<String, String>> maps) {
+    private List<InsertDTO> createCRUDTableDTO(List<Map<String, Object>> maps) {
         List<Map<String, String>> tableMaps = createTableMap(maps, t -> t);
+        //如果值为null 就不会生成对应字段的sql语句
+        List<Map<String, String>> tableMapsNotNull = filterNotNull(tableMaps);
         return createInsertDTO(tableMaps);
+    }
+
+    private List<Map<String, String>> filterNotNull(List<Map<String, String>> tableMaps) {
+        List<Map<String, String>> tmpList = new ArrayList<>(tableMaps);
+        Map.Entry<String, String> entry;
+        List<String> keys = new ArrayList<>();
+        for (Map<String, String> map : tmpList) {
+            for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
+                entry = stringStringEntry;
+                if (entry.getValue() != null) {
+                    continue;
+                }
+                keys.add(entry.getKey());
+            }
+            for (String key : keys) {
+                map.remove(key);
+            }
+        }
+        return tmpList;
     }
 
     private List<InsertDTO> createInsertDTO(List<Map<String, String>> tableMaps) {
@@ -50,8 +70,8 @@ public class DefaultJSONParser extends AbstractJSONParser {
         }).collect(Collectors.toList());
     }
 
-    private Map<String, String> createCreateTableMap(List<Map<String, String>> maps) {
-        Map<String, String> paramMap = maps.get(0);
+    private Map<String, String> createCreateTableMap(List<Map<String, Object>> maps) {
+        Map<String, Object> paramMap = maps.get(0);
         List<Map<String, String>> tableMaps = createTableMap(Collections.singletonList(paramMap), this::createParamType);
         if (CollectionUtils.isEmpty(tableMaps)) {
             return new HashMap<>();
@@ -74,6 +94,9 @@ public class DefaultJSONParser extends AbstractJSONParser {
 
     @SneakyThrows
     private boolean ifDateSqlType(String value) {
+        if (value == null) {
+            return false;
+        }
         final String[] parsePatterns = {"yyyy-MM-dd", "yyyy年MM月dd日",
                 "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy/MM/dd",
                 "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyyMMdd"};
@@ -87,6 +110,9 @@ public class DefaultJSONParser extends AbstractJSONParser {
 
     private boolean ifNumType(String num) {
         try {
+            if (num == null) {
+                return false;
+            }
             BigDecimal bigDecimal = new BigDecimal(num);
         } catch (NumberFormatException e) {
             return false;
