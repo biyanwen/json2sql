@@ -1,6 +1,8 @@
 package org.github.json2sql.api;
 
+import java.util.Map;
+
 public interface JSONParser {
 
-    void parse(String json, String tableName);
+    Map<String, Object> parse(String json, String tableName);
 }

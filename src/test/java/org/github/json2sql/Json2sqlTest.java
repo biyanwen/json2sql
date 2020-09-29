@@ -34,9 +34,10 @@ class Json2sqlTest {
         Configuration configuration = new Configuration();
         configuration.registerBeanProcessor("tvMeta", tvMetaBeanProcess);
         configuration.setKeyConversionConfig(KeyConversionConfig.hump2UnderscoreCapital);
+        configuration.setIgnoreKeys("deviceId");
         Json2sql.setConfiguration(configuration);
-        Json2sql.parse(json,"EM_AREA_LOAD_FC");
-        System.out.println();
+        String emAreaLoadFc = Json2sql.parse2String(json, "EM_AREA_LOAD_FC");
+        System.out.println(emAreaLoadFc);
     }
 
     @Test

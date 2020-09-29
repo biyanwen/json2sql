@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class DefaultJSONParser extends AbstractJSONParser {
     @SneakyThrows
     @Override
-    public void parse(String json, String tableName) {
+    public Map<String, Object> parse(String json, String tableName) {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, Object>> maps = objectMapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {
         });
@@ -31,15 +31,14 @@ public class DefaultJSONParser extends AbstractJSONParser {
         sqlParamMap.put("tableParam", createTableNeedParamMap);
         sqlParamMap.put("insertParam", insertDTOS);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
-        jsonWriter.writer(sqlParamMap, null, tableName + ".sql");
+        return sqlParamMap;
     }
 
     private List<InsertDTO> createCRUDTableDTO(List<Map<String, Object>> maps) {
         List<Map<String, String>> tableMaps = createTableMap(maps, t -> t);
         //如果值为null 就不会生成对应字段的sql语句
         List<Map<String, String>> tableMapsNotNull = filterNotNull(tableMaps);
-        return createInsertDTO(tableMaps);
+        return createInsertDTO(tableMapsNotNull);
     }
 
     private List<Map<String, String>> filterNotNull(List<Map<String, String>> tableMaps) {

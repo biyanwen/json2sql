@@ -9,5 +9,8 @@ import java.util.Map;
  * @create 2020/9/27
  */
 public interface JSONWriter {
-    void writer(Map<String, Object> sqlParamMap, String path,String tableName);
+    void writer(Map<String, Object> sqlParamMap, String path,String sqlFileName);
+
+
+    String writer(Map<String, Object> sqlParamMap);
 }

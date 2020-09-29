@@ -44,11 +44,13 @@ public abstract class AbstractJSONParser implements JSONParser {
 
     protected List<Map<String, String>> createTableMap(List<Map<String, Object>> maps, Function<String, String> function) {
         List<Map<String, String>> mapList = new ArrayList<>();
-        //processor
         for (Map<String, Object> map : maps) {
             Map<String, String> stringMap = mapProcessor(map);
             Map<String, String> tableMap = new LinkedHashMap<>();
             for (Map.Entry<String, String> entry : stringMap.entrySet()) {
+                if (ifIgnore(entry.getKey())) {
+                    continue;
+                }
                 String key = KeyConversionEnum.valueOf(configuration.getKeyConversionConfig().toString()).getKeyConversionStrategy().cover(entry.getKey());
                 String paramType;
                 paramType = function.apply(entry.getValue());
@@ -57,6 +59,11 @@ public abstract class AbstractJSONParser implements JSONParser {
             mapList.add(tableMap);
         }
         return mapList;
+    }
+
+    private boolean ifIgnore(String key) {
+        List<String> ignoreKeys = configuration.getIgnoreKeys();
+        return ignoreKeys.contains(key);
     }
 
     private Map<String, String> mapProcessor(Map<String, Object> map) {

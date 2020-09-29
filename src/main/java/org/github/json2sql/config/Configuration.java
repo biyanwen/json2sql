@@ -27,6 +27,20 @@ public class Configuration {
      */
     private final List<Map<String, BeanProcessor>> beanProcessorMaps = new ArrayList<>();
 
+    private List<String> ignoreKeys = new ArrayList<>();
+
+    public void setIgnoreKeys(List<String> keys) {
+        ignoreKeys.addAll(keys);
+    }
+
+    public void setIgnoreKeys(String key) {
+        ignoreKeys.add(key);
+    }
+
+    public List<String> getIgnoreKeys() {
+        return ignoreKeys;
+    }
+
     public List<Map<String, BeanProcessor>> getBeanProcessorMaps() {
         return beanProcessorMaps;
     }
