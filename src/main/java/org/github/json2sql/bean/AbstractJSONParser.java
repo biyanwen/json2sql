@@ -6,6 +6,7 @@ import org.github.json2sql.api.BeanProcessor;
 import org.github.json2sql.api.JSONParser;
 import org.github.json2sql.config.Configuration;
 import org.github.json2sql.enums.KeyConversionEnum;
+import org.github.json2sql.impl.DefaultBeanProcessor;
 
 import java.util.*;
 import java.util.function.Function;
@@ -93,8 +94,11 @@ public abstract class AbstractJSONParser implements JSONParser {
             }
         }
 
+        //如果使用者没有手动处理嵌套对象就自动处理
+        Map<String, Object> autoProcessResult = autoProcess(temp);
+
         //剩下的元素都转换成String
-        for (Map.Entry<String, Object> stringObjectEntry : temp.entrySet()) {
+        for (Map.Entry<String, Object> stringObjectEntry : autoProcessResult.entrySet()) {
             String value = null;
             if (stringObjectEntry.getValue() != null) {
                 value = stringObjectEntry.getValue().toString();
@@ -102,5 +106,20 @@ public abstract class AbstractJSONParser implements JSONParser {
             stringMap.put(stringObjectEntry.getKey(), value);
         }
         return stringMap;
+    }
+
+    protected Map<String, Object> autoProcess(Map<String, Object> temp) {
+        Map<String, Object> result = new HashMap<>(temp);
+
+        for (Map.Entry<String, Object> entry : temp.entrySet()) {
+            if (!(entry.getValue() instanceof Map)) {
+                continue;
+            }
+            BeanProcessor<Map<String, Object>> beanProcessor = new DefaultBeanProcessor();
+            Map<String, String> processorResult = beanProcessor.processor((Map<String, Object>) entry.getValue());
+            result.remove(entry.getKey());
+            result.putAll(processorResult);
+        }
+        return result;
     }
 }

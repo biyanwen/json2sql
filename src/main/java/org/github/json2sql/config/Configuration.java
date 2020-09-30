@@ -25,9 +25,16 @@ public class Configuration {
      * list类型表示可以注册多个处理器
      * map 的key为要处理javabean的key
      */
-    private final List<Map<String, BeanProcessor>> beanProcessorMaps = new ArrayList<>();
+    private List<Map<String, BeanProcessor>> beanProcessorMaps = new ArrayList<>();
 
+    /**
+     * 要忽略不处理的字段
+     */
     private List<String> ignoreKeys = new ArrayList<>();
+
+    public void setBeanProcessorMaps(List<Map<String, BeanProcessor>> beanProcessorMaps) {
+        this.beanProcessorMaps = beanProcessorMaps;
+    }
 
     public void setIgnoreKeys(List<String> keys) {
         ignoreKeys.addAll(keys);
@@ -72,7 +79,11 @@ public class Configuration {
     }
 
     public void setVarcharLength(String varcharLength) {
-        this.varcharLength = varcharLength;
+        if (varcharLength.contains("(") && varcharLength.contains(")")) {
+            this.varcharLength = varcharLength;
+        } else {
+            this.varcharLength = "(" + varcharLength + ")";
+        }
     }
 
     public String getDecimalPrecision() {
@@ -80,6 +91,10 @@ public class Configuration {
     }
 
     public void setDecimalPrecision(String decimalPrecision) {
-        this.decimalPrecision = decimalPrecision;
+        if (decimalPrecision.contains("(") && decimalPrecision.contains(")")) {
+            this.decimalPrecision = decimalPrecision;
+        } else {
+            this.decimalPrecision = "(" + decimalPrecision + ")";
+        }
     }
 }
