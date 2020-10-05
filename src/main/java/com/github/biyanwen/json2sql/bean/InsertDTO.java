@@ -1,4 +1,4 @@
-package org.github.json2sql.bean;
+package com.github.biyanwen.json2sql.bean;
 
 import java.util.List;
 

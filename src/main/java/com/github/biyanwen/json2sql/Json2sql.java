@@ -1,10 +1,10 @@
-package org.github.json2sql;
+package com.github.biyanwen.json2sql;
 
-import org.github.json2sql.api.JSONParser;
-import org.github.json2sql.api.JSONWriter;
-import org.github.json2sql.config.Configuration;
-import org.github.json2sql.impl.DefaultJSONParser;
-import org.github.json2sql.impl.DefaultJSONWriter;
+import com.github.biyanwen.json2sql.api.JSONWriter;
+import com.github.biyanwen.json2sql.impl.DefaultJSONParser;
+import com.github.biyanwen.json2sql.impl.DefaultJSONWriter;
+import com.github.biyanwen.json2sql.api.JSONParser;
+import com.github.biyanwen.json2sql.config.Configuration;
 
 import java.util.Map;
 

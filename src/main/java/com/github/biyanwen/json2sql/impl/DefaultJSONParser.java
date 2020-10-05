@@ -1,13 +1,12 @@
-package org.github.json2sql.impl;
+package com.github.biyanwen.json2sql.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.github.json2sql.api.JSONWriter;
-import org.github.json2sql.bean.AbstractJSONParser;
-import org.github.json2sql.bean.InsertDTO;
+import com.github.biyanwen.json2sql.bean.AbstractJSONParser;
+import com.github.biyanwen.json2sql.bean.InsertDTO;
 
 import java.math.BigDecimal;
 import java.text.ParseException;

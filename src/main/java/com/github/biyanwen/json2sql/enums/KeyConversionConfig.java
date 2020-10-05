@@ -1,4 +1,4 @@
-package org.github.json2sql.enums;
+package com.github.biyanwen.json2sql.enums;
 
 /**
  * Description:  <br>

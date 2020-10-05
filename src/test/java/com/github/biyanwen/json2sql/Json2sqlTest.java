@@ -1,10 +1,10 @@
-package org.github.json2sql;
+package com.github.biyanwen.json2sql;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.github.json2sql.api.BeanProcessor;
-import org.github.json2sql.config.Configuration;
-import org.github.json2sql.config.ConfigurationBuilder;
-import org.github.json2sql.enums.KeyConversionConfig;
+import com.github.biyanwen.json2sql.api.BeanProcessor;
+import com.github.biyanwen.json2sql.enums.KeyConversionConfig;
+import com.github.biyanwen.json2sql.config.Configuration;
+import com.github.biyanwen.json2sql.config.ConfigurationBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

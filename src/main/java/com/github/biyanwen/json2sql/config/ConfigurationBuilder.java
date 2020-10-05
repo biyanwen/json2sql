@@ -1,7 +1,7 @@
-package org.github.json2sql.config;
+package com.github.biyanwen.json2sql.config;
 
-import org.github.json2sql.api.BeanProcessor;
-import org.github.json2sql.enums.KeyConversionConfig;
+import com.github.biyanwen.json2sql.api.BeanProcessor;
+import com.github.biyanwen.json2sql.enums.KeyConversionConfig;
 
 import java.util.*;
 

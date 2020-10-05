@@ -1,6 +1,6 @@
-package org.github.json2sql.enums;
+package com.github.biyanwen.json2sql.enums;
 
-import org.github.json2sql.api.KeyConversionStrategy;
+import com.github.biyanwen.json2sql.api.KeyConversionStrategy;
 
 /**
  * Description:  <br>

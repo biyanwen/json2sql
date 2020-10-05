@@ -1,11 +1,11 @@
-package org.github.json2sql.impl;
+package com.github.biyanwen.json2sql.impl;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.github.json2sql.api.JSONWriter;
+import com.github.biyanwen.json2sql.api.JSONWriter;
 
 import java.io.*;
 import java.util.Map;

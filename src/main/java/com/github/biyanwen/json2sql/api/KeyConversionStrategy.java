@@ -1,4 +1,4 @@
-package org.github.json2sql.api;
+package com.github.biyanwen.json2sql.api;
 
 import com.google.common.base.CaseFormat;
 

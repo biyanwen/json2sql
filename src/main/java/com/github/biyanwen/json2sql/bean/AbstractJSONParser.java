@@ -1,17 +1,17 @@
-package org.github.json2sql.bean;
+package com.github.biyanwen.json2sql.bean;
 
+import com.github.biyanwen.json2sql.impl.DefaultBeanProcessor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.github.json2sql.Json2sql;
-import org.github.json2sql.api.BeanProcessor;
-import org.github.json2sql.api.JSONParser;
-import org.github.json2sql.config.Configuration;
-import org.github.json2sql.enums.KeyConversionEnum;
-import org.github.json2sql.impl.DefaultBeanProcessor;
+import com.github.biyanwen.json2sql.Json2sql;
+import com.github.biyanwen.json2sql.api.BeanProcessor;
+import com.github.biyanwen.json2sql.api.JSONParser;
+import com.github.biyanwen.json2sql.config.Configuration;
+import com.github.biyanwen.json2sql.enums.KeyConversionEnum;
 
 import java.util.*;
 import java.util.function.Function;
 
-import static org.github.json2sql.Json2sql.*;
+import static com.github.biyanwen.json2sql.Json2sql.*;
 
 public abstract class AbstractJSONParser implements JSONParser {
     private final Configuration configuration = Json2sql.getConfiguration();
