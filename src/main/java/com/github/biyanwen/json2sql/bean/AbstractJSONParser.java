@@ -1,6 +1,7 @@
 package com.github.biyanwen.json2sql.bean;
 
 import com.github.biyanwen.json2sql.impl.DefaultBeanProcessor;
+import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import com.github.biyanwen.json2sql.Json2sql;
 import com.github.biyanwen.json2sql.api.BeanProcessor;
@@ -78,7 +79,7 @@ public abstract class AbstractJSONParser implements JSONParser {
         Map<String, Object> temp = new HashMap<>(map);
         Map<String, String> stringMap = new HashMap<>();
         if (CollectionUtils.isNotEmpty(beanProcessorMaps)) {
-            //用javabean处理json中的嵌套对象
+            //用BeanProcessor处理json中的特殊字段
             for (Map<String, BeanProcessor> beanProcessorMap : beanProcessorMaps) {
                 for (Map.Entry<String, BeanProcessor> entry : beanProcessorMap.entrySet()) {
                     Object obj = temp.get(entry.getKey());
@@ -86,6 +87,13 @@ public abstract class AbstractJSONParser implements JSONParser {
                         continue;
                     }
                     BeanProcessor beanProcessor = entry.getValue();
+                    //如果obj不是map就构造一个Map
+                    if (!(obj instanceof Map)) {
+                        Map<String,Object> hashMap = new HashMap<>();
+                        hashMap.put(entry.getKey(),obj);
+                        obj = hashMap;
+
+                    }
                     Map<String, String> beanProcessorResultMap = beanProcessor.processor(obj);
                     stringMap.putAll(beanProcessorResultMap);
                     //处理完移除原来的元素
