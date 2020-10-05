@@ -3,7 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.biyanwen</groupId>
   <artifactId>json2sql</artifactId>
-  <version>1.0.0</version>
+  <name>json2sql</name>
+  <version>1.0.1</version>
+  <description>json2sql</description>
+  <url>https://github.com/biyanwen/json2sql</url>
   <developers>
     <developer>
       <name>biyanwen</name>
@@ -39,6 +42,21 @@
         </executions>
       </plugin>
       <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <additionalJOption>-Xdoclint:none</additionalJOption>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-gpg-plugin</artifactId>
         <version>1.6</version>
         <executions>
@@ -52,6 +70,17 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.7</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.4.2</version>
       </plugin>
@@ -61,6 +90,13 @@
         <configuration>
           <source>8</source>
           <target>8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M5</version>
+        <configuration>
+          <reportsDirectory>${project.build.directory}/reports</reportsDirectory>
         </configuration>
       </plugin>
       <plugin>
