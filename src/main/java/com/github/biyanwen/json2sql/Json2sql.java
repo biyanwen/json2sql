@@ -22,7 +22,7 @@ public class Json2sql {
      *
      * @param json      json字符串
      * @param tableName 表名字
-     * @param path      生成sql文件存储路径
+     * @param path      生成sql文件存储路径 如果不传默认生成在当前项目目录
      */
     public static void parse(String json, String tableName, String... path) {
         Map<String, Object> sqlParamMap = parser(json, tableName);
