@@ -2,11 +2,11 @@ package com.github.biyanwen.json2sql.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.biyanwen.json2sql.bean.AbstractJSONParser;
+import com.github.biyanwen.json2sql.bean.InsertDTO;
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import com.github.biyanwen.json2sql.bean.AbstractJSONParser;
-import com.github.biyanwen.json2sql.bean.InsertDTO;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -18,6 +18,8 @@ public class DefaultJSONParser extends AbstractJSONParser {
     @SneakyThrows
     @Override
     public Map<String, Object> parse(String json, String tableName) {
+        //json必须为array类型 如果不是就转换成array
+        json = checkIfJsonArray(json);
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, Object>> maps = objectMapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {
         });
@@ -31,6 +33,14 @@ public class DefaultJSONParser extends AbstractJSONParser {
         sqlParamMap.put("insertParam", insertDTOS);
 
         return sqlParamMap;
+    }
+
+    private String checkIfJsonArray(String json) {
+        if (json.startsWith("{") && json.endsWith("}")) {
+            return "[" + json + "]";
+        } else {
+            return json;
+        }
     }
 
     private List<InsertDTO> createCRUDTableDTO(List<Map<String, Object>> maps) {
