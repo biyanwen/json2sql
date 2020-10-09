@@ -4,7 +4,7 @@
   <groupId>com.github.biyanwen</groupId>
   <artifactId>json2sql</artifactId>
   <name>json2sql</name>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <description>json2sql</description>
   <url>https://github.com/biyanwen/json2sql</url>
   <developers>
@@ -62,7 +62,7 @@
         <executions>
           <execution>
             <id>sign-artifacts</id>
-            <phase>verify</phase>
+            <phase>deploy</phase>
             <goals>
               <goal>sign</goal>
             </goals>
