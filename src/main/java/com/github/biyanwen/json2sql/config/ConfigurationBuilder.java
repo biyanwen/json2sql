@@ -17,6 +17,7 @@ public final class ConfigurationBuilder {
     private KeyConversionConfig keyConversionConfig = KeyConversionConfig.nothing;
     private List<String> ignoreKeys = new ArrayList<>();
     private List<Map<String, BeanProcessor>> beanProcessorMaps = new ArrayList<>();
+    private boolean generateNull = false;
 
     private ConfigurationBuilder() {
     }
@@ -42,6 +43,11 @@ public final class ConfigurationBuilder {
 
     public ConfigurationBuilder withIgnoreKeys(List<String> ignoreKeys) {
         this.ignoreKeys = ignoreKeys;
+        return this;
+    }
+
+    public ConfigurationBuilder withGenerateNull(boolean generateNull) {
+        this.generateNull = generateNull;
         return this;
     }
 
@@ -74,6 +80,7 @@ public final class ConfigurationBuilder {
         configuration.setKeyConversionConfig(keyConversionConfig);
         configuration.setIgnoreKeys(ignoreKeys);
         configuration.setBeanProcessorMaps(beanProcessorMaps);
+        configuration.setGenerateNull(generateNull);
         return configuration;
     }
 }

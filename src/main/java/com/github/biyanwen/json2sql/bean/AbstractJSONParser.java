@@ -15,7 +15,7 @@ import java.util.function.Function;
 import static com.github.biyanwen.json2sql.Json2sql.*;
 
 public abstract class AbstractJSONParser implements JSONParser {
-    private final Configuration configuration = Json2sql.getConfiguration();
+    protected final Configuration configuration = Json2sql.getConfiguration();
 
     protected String getVarchar() {
         return VARCHAR + configuration.getVarcharLength();

@@ -6,7 +6,7 @@
 
     <groupId>com.github.biyanwen</groupId>
     <artifactId>json2sql</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <name>json2sql</name>
     <description>json2sql</description>
@@ -223,7 +223,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>29.0-jre</version>
+            <version>30.0-jre</version>
         </dependency>
     </dependencies>
 

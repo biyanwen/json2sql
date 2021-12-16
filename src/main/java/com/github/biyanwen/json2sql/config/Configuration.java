@@ -32,6 +32,19 @@ public class Configuration {
      */
     private List<String> ignoreKeys = new ArrayList<>();
 
+    /**
+     * 是否为 null 值生成 sql 。默认为 false
+     */
+    private boolean generateNull = false;
+
+    public boolean isGenerateNull() {
+        return generateNull;
+    }
+
+    public void setGenerateNull(boolean generateNull) {
+        this.generateNull = generateNull;
+    }
+
     public void setBeanProcessorMaps(List<Map<String, BeanProcessor>> beanProcessorMaps) {
         this.beanProcessorMaps = beanProcessorMaps;
     }

@@ -46,8 +46,10 @@ public class DefaultJSONParser extends AbstractJSONParser {
     private List<InsertDTO> createCRUDTableDTO(List<Map<String, Object>> maps) {
         List<Map<String, String>> tableMaps = createTableMap(maps, t -> t);
         //如果值为null 就不会生成对应字段的sql语句
-        List<Map<String, String>> tableMapsNotNull = filterNotNull(tableMaps);
-        return createInsertDTO(tableMapsNotNull);
+        if (configuration.isGenerateNull()) {
+            tableMaps = filterNotNull(tableMaps);
+        }
+        return createInsertDTO(tableMaps);
     }
 
     private List<Map<String, String>> filterNotNull(List<Map<String, String>> tableMaps) {
