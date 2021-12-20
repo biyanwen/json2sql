@@ -15,7 +15,12 @@
         )
         VALUES (
         <#list insertDTO.values as value>
-            '${value}'<#if value_has_next>,</#if>
+            <#if value??>
+                '${value}'<#if value_has_next>,</#if>
+            <#else>
+                null<#if value_has_next>,</#if>
+            </#if>
+
         </#list>
         );
     </#list>
