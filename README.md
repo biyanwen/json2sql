@@ -9,7 +9,7 @@
 <dependency>
     <groupId>com.github.biyanwen</groupId>
     <artifactId>json2sql</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
